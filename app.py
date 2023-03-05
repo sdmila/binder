@@ -177,21 +177,29 @@ class App:
         self.main.bind("<Control-c>", lambda event: self.copy())
         self.main.bind("<Control-v>", lambda event: self.paste())
 
-    def cut(self):
-        current_tab = self.notebook.select()
-        text_field = self.notebook.nametowidget(current_tab).winfo_children()[0]
-        text_field.event_generate("<<Cut>>")
-
     def copy(self):
         current_tab = self.notebook.select()
         text_field = self.notebook.nametowidget(current_tab).winfo_children()[0]
-        text_field.event_generate("<<Copy>>")
+        text = text_field.get("sel.first", "sel.last")
+        self.main.clipboard_clear()
+        self.main.clipboard_append(text)
+
+    def cut(self):
+        current_tab = self.notebook.select()
+        text_field = self.notebook.nametowidget(current_tab).winfo_children()[0]
+        text = text_field.get("sel.first", "sel.last")
+        self.main.clipboard_clear()
+        self.main.clipboard_append(text)
+        text_field.delete("sel.first", "sel.last")
 
     def paste(self):
         current_tab = self.notebook.select()
         text_field = self.notebook.nametowidget(current_tab).winfo_children()[0]
-        text_field.event_generate("<<Paste>>")
+        if text_field.tag_ranges("sel"):
+            text_field.delete("sel.first", "sel.last")
+        text_field.insert("insert", self.main.clipboard_get())
 
-root = tk.Tk()
-app = App(root)
-root.mainloop()
+if __name__ == '__main__':
+    root = tk.Tk()
+    app = App(root)
+    root.mainloop()
