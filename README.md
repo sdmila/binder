@@ -6,4 +6,4 @@ Binder is a simple, cross-platform text editor.
 
 ## License
 
-Binder is licensed under the [GPL](https://github.com/sdmila/binder/blob/main/LICENSE).
+Binder is licensed under the [GNU General Public License v3.0](https://github.com/sdmila/binder/blob/main/LICENSE).
