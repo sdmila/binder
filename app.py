@@ -67,6 +67,17 @@ class App:
         )
         file_menu.add_separator()
         file_menu.add_command(
+            label = "Close",
+            accelerator = "Ctrl+W",
+            command = self.close
+        )
+        file_menu.add_command(
+            label = "Close All",
+            accelerator = "Ctrl+Shift+W",
+            command = self.close_all
+        )
+        file_menu.add_separator()
+        file_menu.add_command(
             label = "Exit",
             accelerator = "Alt+F4",
             command = self.main.quit
@@ -79,6 +90,8 @@ class App:
         self.main.bind("<Control-o>", lambda event: self.open_file())
         self.main.bind("<Control-s>", lambda event: self.save_file())
         self.main.bind("<Control-S>", lambda event: self.save_file_as())
+        self.main.bind("<Control-w>", lambda event: self.close())
+        self.main.bind("<Control-W>", lambda event: self.close_all())
         self.main.bind("<Alt-F4>", lambda event: self.main.quit())
 
     def new_file(self):
@@ -148,6 +161,18 @@ class App:
                 text = file_name
             )
             self.main.title(file_path + " - Binder")
+
+    def close(self):
+        current_tab = self.notebook.select()
+        if current_tab:
+            if self.notebook.index('end') == 1:
+                self.new_file()
+            self.notebook.forget(current_tab)
+
+    def close_all(self):
+        for tab in self.notebook.tabs():
+            self.notebook.forget(tab)
+        self.new_file()
 
     def define_edit_menu(self):
         edit_menu = tk.Menu(
