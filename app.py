@@ -2,6 +2,7 @@ import os
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
+import webbrowser
 
 class App:
     def __init__(self, main):
@@ -22,6 +23,7 @@ class App:
         self.menu_bar = tk.Menu(self.main)
         self.define_file_menu()
         self.define_edit_menu()
+        self.define_help_menu()
         self.main.config(menu = self.menu_bar)
 
     def create_notebook(self):
@@ -223,6 +225,23 @@ class App:
         if text_field.tag_ranges("sel"):
             text_field.delete("sel.first", "sel.last")
         text_field.insert("insert", self.main.clipboard_get())
+
+    def define_help_menu(self):
+        help_menu = tk.Menu(
+            self.menu_bar,
+            tearoff=0
+        )
+        help_menu.add_command(
+            label = "GitHub Repository",
+            command = self.open_github_repository
+        )
+        self.menu_bar.add_cascade(
+            label = "Help",
+            menu = help_menu
+        )
+
+    def open_github_repository(self):
+        webbrowser.open('https://www.github.com/sdmila/binder/')
 
 if __name__ == '__main__':
     root = tk.Tk()
