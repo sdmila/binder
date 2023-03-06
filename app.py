@@ -199,17 +199,10 @@ class App:
         self.menu_bar.add_cascade(
             label = "Edit",
             menu = edit_menu
-        )
+        )  
         self.main.bind("<Control-x>", lambda event: self.cut())
         self.main.bind("<Control-c>", lambda event: self.copy())
         self.main.bind("<Control-v>", lambda event: self.paste())
-
-    def copy(self):
-        current_tab = self.notebook.select()
-        text_field = self.notebook.nametowidget(current_tab).winfo_children()[0]
-        text = text_field.get("sel.first", "sel.last")
-        self.main.clipboard_clear()
-        self.main.clipboard_append(text)
 
     def cut(self):
         current_tab = self.notebook.select()
@@ -218,6 +211,13 @@ class App:
         self.main.clipboard_clear()
         self.main.clipboard_append(text)
         text_field.delete("sel.first", "sel.last")
+
+    def copy(self):
+        current_tab = self.notebook.select()
+        text_field = self.notebook.nametowidget(current_tab).winfo_children()[0]
+        text = text_field.get("sel.first", "sel.last")
+        self.main.clipboard_clear()
+        self.main.clipboard_append(text)
 
     def paste(self):
         current_tab = self.notebook.select()
