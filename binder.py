@@ -17,8 +17,8 @@ class About(tk.Toplevel):
         self.transient(parent)
         self.geometry(
             "+{}+{}".format(
-                parent.winfo_rootx() + parent.winfo_width() // 2 - 100,
-                parent.winfo_rooty() + parent.winfo_height() // 2 - 150
+                parent.winfo_rootx() + parent.winfo_width() // 2,
+                parent.winfo_rooty() + parent.winfo_height() // 2
             )
         )
         self.wait_visibility()
@@ -55,6 +55,63 @@ class About(tk.Toplevel):
 
     def close(self):
         About.is_open = False
+        self.destroy()
+
+class License(tk.Toplevel):
+    is_open = False
+
+    def __init__(self, parent):
+        if License.is_open:
+            return
+        License.is_open = True
+        super().__init__(parent)
+        self.overrideredirect(True)
+        self.resizable(False, False)
+        self.transient(parent)
+        self.geometry(
+            "+{}+{}".format(
+                parent.winfo_rootx() + parent.winfo_width() // 2 - 50,
+                parent.winfo_rooty() + parent.winfo_height() // 2 - 50
+            )
+        )
+        self.wait_visibility()
+        self.grab_set()
+        self.create_content()
+        self.wait_window()
+
+    def create_content(self):
+        license_label = tk.Label(
+            self,
+            text="GNU General Public License",
+            anchor="w"
+        )
+        license_label.pack(padx = 10, pady = 10)
+
+        text_box_frame = tk.Frame(self)
+        text_box_frame.pack(fill="both", expand=True)
+
+        text_box = tk.Text(text_box_frame, height=10, width=50)
+        text_box.pack(side="left", fill="both", expand=True)
+
+        scrollbar = tk.Scrollbar(text_box_frame, orient="vertical", command=text_box.yview)
+        scrollbar.pack(side="right", fill="y")
+
+        text_box.configure(yscrollcommand=scrollbar.set)
+
+        with open("LICENSE.md", "r") as f:
+            license_text = f.read()
+        text_box.insert("end", license_text)
+        text_box.configure(state="disabled")
+
+        close_button = tk.Button(
+            self,
+            text="Close",
+            command=self.close
+        )
+        close_button.pack(pady=10)
+
+    def close(self):
+        License.is_open = False
         self.destroy()
 
 class Main:
@@ -290,7 +347,7 @@ class Main:
         )
         help_menu.add_command(
             label = "License",
-            command = self.open_license
+            command = self.show_license_dialog
         )
         help_menu.add_separator()
         help_menu.add_command(
@@ -307,8 +364,8 @@ class Main:
     def open_github_repository(self):
         webbrowser.open('https://www.github.com/sdmila/binder/')
 
-    def open_license(self):
-        webbrowser.open('https://www.gnu.org/licenses/gpl-3.0.en.html')
+    def show_license_dialog(self):
+        License(self.main)
 
     def show_about_dialog(self):
         About(self.main)
