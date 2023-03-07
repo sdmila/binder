@@ -98,7 +98,7 @@ class License(tk.Toplevel):
 
         text_box.configure(yscrollcommand=scrollbar.set)
 
-        with open("LICENSE.md", "r") as f:
+        with open("LICENSE.txt", "r") as f:
             license_text = f.read()
         text_box.insert("end", license_text)
         text_box.configure(state="disabled")
