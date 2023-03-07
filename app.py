@@ -4,6 +4,59 @@ from tkinter import ttk
 from tkinter import filedialog
 import webbrowser
 
+class About(tk.Toplevel):
+    is_open = False
+
+    def __init__(self, parent):
+        if About.is_open:
+            return
+        About.is_open = True
+        super().__init__(parent)
+        self.overrideredirect(True)
+        self.resizable(False, False)
+        self.transient(parent)
+        self.geometry(
+            "+{}+{}".format(
+                parent.winfo_rootx() + parent.winfo_width() // 2 - 100,
+                parent.winfo_rooty() + parent.winfo_height() // 2 - 150
+            )
+        )
+        self.wait_visibility()
+        self.grab_set()
+        
+        name_label = tk.Label(
+            self,
+            text="Binder"
+        )
+        name_label.pack(padx=10, pady=10)
+
+        version_label = tk.Label(
+            self,
+            text="Version: 0.0.1",
+            anchor="w"
+        )
+        version_label.pack(padx=10)
+
+        license_label = tk.Label(
+            self,
+            text="License: GPLv3",
+            anchor="w"
+        )
+        license_label.pack(padx=10)
+
+        close_button = tk.Button(
+            self,
+            text="Close",
+            command=self.close
+        )
+        close_button.pack(pady=10)
+        
+        self.wait_window()
+
+    def close(self):
+        About.is_open = False
+        self.destroy()
+
 class App:
     def __init__(self, main):
         self.main = main
@@ -235,13 +288,23 @@ class App:
             label = "GitHub Repository",
             command = self.open_github_repository
         )
+        help_menu.add_separator()
+        help_menu.add_command(
+            label = "About",
+            accelerator = "F1",
+            command = self.show_about_dialog
+        )
         self.menu_bar.add_cascade(
             label = "Help",
             menu = help_menu
         )
+        self.main.bind("<F1>", lambda event: self.show_about_dialog())
 
     def open_github_repository(self):
         webbrowser.open('https://www.github.com/sdmila/binder/')
+
+    def show_about_dialog(self):
+        About(self.main)
 
 if __name__ == '__main__':
     root = tk.Tk()
