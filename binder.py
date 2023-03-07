@@ -288,6 +288,10 @@ class Main:
             label = "GitHub Repository",
             command = self.open_github_repository
         )
+        help_menu.add_command(
+            label = "License",
+            command = self.open_license
+        )
         help_menu.add_separator()
         help_menu.add_command(
             label = "About",
@@ -302,6 +306,9 @@ class Main:
 
     def open_github_repository(self):
         webbrowser.open('https://www.github.com/sdmila/binder/')
+
+    def open_license(self):
+        webbrowser.open('https://www.gnu.org/licenses/gpl-3.0.en.html')
 
     def show_about_dialog(self):
         About(self.main)
